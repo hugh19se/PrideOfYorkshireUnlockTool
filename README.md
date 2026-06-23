@@ -3,6 +3,9 @@ C# Based Console Application created to unlock all lions in the 2026 Pride Of Yo
 
 [![Pride Of Yorkshire Trail](https://trail.prideofyorkshire.org/images/svg/logos/poy-blue.svg)](https://trail.prideofyorkshire.org/)
 
+## ⚠️Disclaimer⚠️
+The materials and tools provided here are for educational and research purposes only. The author assumes no liability for any potential improper use, unauthorized access, or damage caused by these resources.
+
 ## How It Works
 * When the trail website loads it calls the API's `sync` endpoint. This exposes the IDs of the Lion scupltures
     - The unlock code (the 6 letter code printed on the base of each sculpture) is also returned in the `cheatCode` attribute, but that's not important right now
