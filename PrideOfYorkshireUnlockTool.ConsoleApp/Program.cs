@@ -12,10 +12,14 @@
                 Console.WriteLine("Enter User Password");
                 string password = Console.ReadLine() ?? throw new FormatException("Invalid Password Entered");
 
-                Console.WriteLine("\nAttempting Login...");
                 APIHandler apiHandler = new();
+
+                Console.WriteLine("\nAttempting Login...");
                 KeyValuePair<int, string> userInfo = await apiHandler.AttemptLogin(emailAddress, password);
-                Console.WriteLine($"Successfully Logged In\nUser ID: {userInfo.Key}\nDisplay Name: {userInfo.Value}\n");
+                Console.WriteLine($"Successfully Logged In\nUser ID: {userInfo.Key}\nDisplay Name: {userInfo.Value}");
+
+                Console.WriteLine("\nRetrieving List Of Sculptures...");
+                IEnumerable<string> sculptures = await apiHandler.GetSculptureIDs();
             }
             catch (FormatException ex)
             {
