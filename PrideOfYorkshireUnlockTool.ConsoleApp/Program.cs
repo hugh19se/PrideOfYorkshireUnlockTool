@@ -20,6 +20,20 @@
 
                 Console.WriteLine("\nRetrieving List Of Sculptures...");
                 IEnumerable<string> sculptures = await apiHandler.GetSculptureIDs();
+
+                Console.WriteLine("\nUnlocking All Available Sculptures...");
+                IEnumerable<string> acceptedSculptureIDs = await apiHandler.UnlockSculptures(sculptures);
+                Console.WriteLine($"Unlocked {acceptedSculptureIDs.Count()} Sculptures");
+
+                IEnumerable<string> notAcceptedSculptures = sculptures.Where(x => !acceptedSculptureIDs.Contains(x));
+                if(notAcceptedSculptures.Any())
+                {
+                    Console.WriteLine("\nThe Following Sculpture IDs Were NOT Accepted");
+                    foreach (string sculptureId in notAcceptedSculptures)
+                    {
+                        Console.WriteLine(sculptureId);
+                    }
+                }
             }
             catch (FormatException ex)
             {

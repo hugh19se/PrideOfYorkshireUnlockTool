@@ -9,7 +9,11 @@ namespace PrideOfYorkshireUnlockTool.ConsoleApp
         private readonly HttpClient Client;
         public APIHandler()
         {
-            Client = new() {BaseAddress = new("https://prideofyorkshire.org/wp-json/trail/v1/")};
+            Client = new()
+            {
+                BaseAddress = new("https://prideofyorkshire.org/wp-json/trail/v1/"),
+                Timeout = TimeSpan.FromMinutes(30)
+            };
         }
 
         public async Task<KeyValuePair<int, string>> AttemptLogin(string emailAddress, string password)
@@ -39,6 +43,24 @@ namespace PrideOfYorkshireUnlockTool.ConsoleApp
             SyncResponse response = await JsonSerializer.DeserializeAsync<SyncResponse>(responseStream) ?? throw new JsonException("Sync Response Is Not In Expected Format");
 
             return response.Sculptures.Select(x => x.ID);
+        }
+
+        public async Task<IEnumerable<string>> UnlockSculptures(IEnumerable<string> sculptureIDs)
+        {
+            List<Sculpture> sculptures = [];
+            foreach (string sculptureId in sculptureIDs)
+            {
+                sculptures.Add(new(sculptureId));
+            }
+            UnlockSculpturesRequest payload = new() { Sculptures = sculptures };
+
+            HttpResponseMessage responseMessage = await Client.PostAsJsonAsync("collections", payload);
+            responseMessage.EnsureSuccessStatusCode();
+
+            Stream responseStream = await responseMessage.Content.ReadAsStreamAsync();
+            UnlockSculpturesResponse response = await JsonSerializer.DeserializeAsync<UnlockSculpturesResponse>(responseStream) ?? throw new JsonException("Unlock Sculptures Response Is Not In Expected Format");
+
+            return response.AcceptedIDs;
         }
     }
 }
